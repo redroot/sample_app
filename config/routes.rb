@@ -1,5 +1,7 @@
 SampleApp::Application.routes.draw do
 
+  get "sessions/new"
+
   root :to => 'pages#home' # root directory 
   
   match '/contact', :to => 'pages#contact'
@@ -7,8 +9,11 @@ SampleApp::Application.routes.draw do
   match '/help',    :to => 'pages#help'
   
   resources :users
-  
-  match '/signup', :to => 'users#new'
+  resources :sessions, :only => [:new, :create, :destroy] # get post and delete only, no put
+
+  match '/signup',  :to => 'users#new'
+  match '/signin',  :to => 'sessions#new'
+  match '/signout', :to => 'sessions#destroy'
   
   #get "pages/home"
 

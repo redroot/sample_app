@@ -7,18 +7,18 @@ class UsersController < ApplicationController
 
   def new
 	@user = User.new
-    @title = "Sign up"
+    @title = "Sign Up"
   end
   
   def create
-    @user = User.new(params[:user])
+   @user = User.new(params[:user])
     if @user.save
-      # Handle a successful save.
-	  flash[:success] = "Welcome to the Sample App!"
-	  redirect_to @user
+      sign_in @user # from sessions helpers
+      flash[:success] = "Welcome to the Sample App!"
+      redirect_to @user
     else
       @title = "Sign up"
-      render 'new' # render the new form out
+      render 'new'
     end
   end
 
