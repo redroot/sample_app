@@ -46,7 +46,10 @@ describe "Users" do
 
     describe "failure" do
       it "should not sign a user in" do
-        integration_sign_in({:email => "", :password => ""})
+        visit signin_path
+		fill_in :email,    :with => user.email
+		fill_in :password, :with => user.password
+		click_button
         response.should have_selector("div.flash.error", :content => "Invalid")
       end
     end

@@ -1,7 +1,5 @@
 SampleApp::Application.routes.draw do
 
-  get "sessions/new"
-
   root :to => 'pages#home' # root directory 
   
   match '/contact', :to => 'pages#contact'
