@@ -14,6 +14,7 @@ class UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
+	@microposts = @user.microposts.paginate(:page => params[:page]) # same as above paginate reason
 	@title = @user.name
   end
 
@@ -63,10 +64,6 @@ class UsersController < ApplicationController
   end
   
   private
-
-	def authenticate
-	  deny_access unless signed_in? # deny access from session helper
-	end
 	
 	def correct_user # on edit and update returns current user by default
       @user = User.find(params[:id])

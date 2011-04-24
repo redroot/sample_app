@@ -32,6 +32,8 @@ class User < ActiveRecord::Base
 						 
 	before_save :encrypt_password # bbefore the model is saved, run the encrypt password function
 	
+	has_many :microposts, :dependent => :destroy
+	
 	#################
 	# public
 	#################
@@ -52,6 +54,13 @@ class User < ActiveRecord::Base
 	def self.authenticate_with_salt(id, cookie_salt)
 	  user = find_by_id(id)
 	  (user && user.salt == cookie_salt) ? user : nil
+	end
+	
+	# returns a feed for a usrs id
+	def feed
+		# This is preliminary. See Chapter 12 for the full implementation.
+		Micropost.where("user_id = ?", id)
+		# eq to microposts
 	end
 	
 	#################

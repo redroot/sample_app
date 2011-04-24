@@ -8,6 +8,7 @@ SampleApp::Application.routes.draw do
   
   resources :users
   resources :sessions, :only => [:new, :create, :destroy] # get post and delete only, no put
+  resources :microposts, :only => [:create, :destroy] # only post and elete, no get
 
   match '/signup',  :to => 'users#new'
   match '/signin',  :to => 'sessions#new'
