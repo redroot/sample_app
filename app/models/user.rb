@@ -34,6 +34,16 @@ class User < ActiveRecord::Base
 	
 	has_many :microposts, :dependent => :destroy
 	
+	has_many :relationships, :foreign_key => "follower_id", # set explicitly, since it will expect user_id inr elatioships object
+                             :dependent => :destroy
+							 
+	has_many :reverse_relationships, :foreign_key => "followed_id", # set explicitly, since it will expect user_id inr elatioships object
+									 :class_name => "Relationship", # again explicitly set
+									 :dependent => :destroy
+	
+	has_many :following, :through => :relationships, :source => :followed
+	has_many :followers, :through => :reverse_relationships, :source => :follower
+	
 	#################
 	# public
 	#################
@@ -56,11 +66,24 @@ class User < ActiveRecord::Base
 	  (user && user.salt == cookie_salt) ? user : nil
 	end
 	
+	# returns true if a relationship exists for a supplied user
+	def following?(followed)
+	  relationships.find_by_followed_id(followed) # assumes id
+    end
+	
+	# creates a new following, 
+    def follow!(followed)
+     	relationships.create!(:followed_id => followed.id)
+    end
+	
+	# deletes a following
+	def unfollow!(followed)
+	   relationships.find_by_followed_id(followed).destroy
+	end
+	
 	# returns a feed for a usrs id
 	def feed
-		# This is preliminary. See Chapter 12 for the full implementation.
-		Micropost.where("user_id = ?", id)
-		# eq to microposts
+		Micropost.from_users_followed_by(self)
 	end
 	
 	#################
